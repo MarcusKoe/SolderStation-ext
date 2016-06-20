@@ -20,4 +20,4 @@ Extended version with:
 - Melt fuse
 - RGB-LED strip for status or cool animations
 
-Housing 3D model
+Housing 3D model for printing

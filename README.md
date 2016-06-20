@@ -2,7 +2,7 @@
 SolderStation vor Weller RT tips, with nice features.
 
 Based on schematics from https://github.com/ConnyCola/SolderingStation
-95% rewritten software
+Software 95% rewritten
 
 Extended version with:
 - 4 buttons

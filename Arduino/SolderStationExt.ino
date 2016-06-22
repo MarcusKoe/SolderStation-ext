@@ -28,7 +28,7 @@ CRGB leds[NUM_LEDS];
 // Problem: Configvals are int = 2byte. Eeprom save only 1byte.
 // Solution: Split in two*1 bytes. Using nice functions
 
-// Von Matthias Busse 5.2014 V 1.0
+// Matthias Busse 5.2014 V 1.0
 // modified by marcus: using update instead write (save write cycles == lifetime)
 void eepromWriteInt(int adr, int wert) {
 byte low, high;
@@ -39,7 +39,7 @@ byte low, high;
   return;
 } 
 
-// Von Matthias Busse 5.2014 V 1.0
+// Matthias Busse 5.2014 V 1.0
 int eepromReadInt(int adr) {
 byte low, high;
   low=EEPROM.read(adr);

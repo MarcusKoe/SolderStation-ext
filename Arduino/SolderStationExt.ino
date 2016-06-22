@@ -28,7 +28,7 @@ CRGB leds[NUM_LEDS];
 // Problem: Configvals are int = 2byte. Eeprom save only 1byte.
 // Solution: Split in two*1 bytes. Using nice functions
 
-// Matthias Busse 5.2014 V 1.0
+// Von Matthias Busse 5.2014 V 1.0
 // modified by marcus: using update instead write (save write cycles == lifetime)
 void eepromWriteInt(int adr, int wert) {
 byte low, high;
@@ -39,7 +39,7 @@ byte low, high;
   return;
 } 
 
-// Matthias Busse 5.2014 V 1.0
+// Von Matthias Busse 5.2014 V 1.0
 int eepromReadInt(int adr) {
 byte low, high;
   low=EEPROM.read(adr);
@@ -160,7 +160,8 @@ void setup(void) {
 
     LoadConfig();
 
-	
+
+
 	Serial.println("RTC Gestartet");
 
 	FastLED.addLeds<WS2812B, LED_PIN,GRB>(leds, NUM_LEDS);
@@ -384,12 +385,12 @@ void buttonstates(){
 				//Serial.println(TimeDelta) ;
 				if(TimeDelta < 3000 && TimeDelta > 50){
 				    // Shortpress
-				    Serial.println("Shortpress");
+				    // Serial.println("Shortpress");
 				    ArrayButtons[Bt][0] = 1 ;
 				    ArrayButtons[Bt][1] = 0 ;
 				} else {
 				    // Longpress
-				    Serial.println("Longpress");
+				    // Serial.println("Longpress");
 				    ArrayButtons[Bt][0] = 0 ;
 					ArrayButtons[Bt][1] = 1 ;
 				}

@@ -9,7 +9,7 @@ Extended version with:
 - - Temperature presets
 - RTC
 - Precise temperature settings via potentiometer
-- Adjustable settings
+- Adjustable settings over Display an Buttons - Planed, not implented yet
 - - Multilanguage support
 - - Different units - Celsius, Kelvin and Fahrenheit
 - - Display brightness

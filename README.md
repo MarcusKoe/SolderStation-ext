@@ -21,3 +21,5 @@ Extended version with:
 - RGB-LED strip for status or cool animations
 
 Housing 3D model for printing
+
+Look at the wiki pages. https://github.com/MarcusKoe/SolderStation-ext/wiki

@@ -1,11 +1,11 @@
 
 #include <FastLED.h>
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7735.h> // Hardware-specific library
+#include <Adafruit_GFX.h>    
+#include <Adafruit_ST7735.h> 
 #include <SPI.h>
-#include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
+#include <DS3232RTC.h>    
 #include "Time.h"
-#include <Wire.h>  // must be incuded here so that Arduino library object file references work
+#include <Wire.h>
 #include <EEPROM.h>
 
 #include "config.h"

@@ -1,7 +1,7 @@
 # SolderStation-ext
 SolderStation for Weller RT tips, with nice features.
 
-Based on schematics from https://github.com/ConnyCola/SolderingStation
+Based on schematics and software from https://github.com/ConnyCola/SolderingStation
 
 Software 95% rewritten
 
@@ -12,7 +12,7 @@ Extended version with:
 - - Temperature presets
 - RTC
 - Precise temperature settings via potentiometer
-- Adjustable settings over Display an Buttons - Planed, not implented yet
+- Adjustable settings over display and buttons - Planned, not implented yet
 - - Multilanguage support
 - - Different units - Celsius, Kelvin and Fahrenheit
 - - Display brightness
@@ -21,8 +21,13 @@ Extended version with:
 - Piezo buzzer
 - USB-Slot type A for light support (IKEA etc.)
 - Melt fuse
-- RGB-LED strip for status or cool animations
+- RGB-LED strip for status or cool animations - not 100% ready
 
 Housing 3D model for printing
 
 Look at the wiki pages. https://github.com/MarcusKoe/SolderStation-ext/wiki
+
+ToDo:
+
+- Change settings over menu is not implemented. It will be done the next month. 
+- Lights and animations - WS2812b strip

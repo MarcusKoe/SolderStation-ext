@@ -3,7 +3,7 @@ SolderStation for Weller RT tips, with nice features.
 
 Based on schematics and software from https://github.com/ConnyCola/SolderingStation
 
-Software 95% rewritten
+Software 95% rewritten, new housing.
 
 Video: https://github.com/MarcusKoe/SolderStation-ext/blob/master/SolderStation-ext.mp4
 

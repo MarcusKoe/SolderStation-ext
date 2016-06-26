@@ -336,10 +336,10 @@ void GetTime(){
 	TimesArray[0] = hour();
 	TimesArray[1] = minute() ;
 	TimesArray[2] = second() ;
-	TimesArray[3] = day() ;
-	TimesArray[4] = month() ;
-	TimesArray[5] = year() ;
-	TimesArray[6] = RTC.temperature() ;
+	// TimesArray[3] = day() ;
+	// TimesArray[4] = month() ;
+	// TimesArray[5] = year() ;
+	// TimesArray[6] = RTC.temperature() ;
 }
 
 

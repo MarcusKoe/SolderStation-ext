@@ -1,5 +1,5 @@
 # SolderStation-ext
-SolderStation vor Weller RT tips, with nice features.
+SolderStation for Weller RT tips, with nice features.
 
 Based on schematics from https://github.com/ConnyCola/SolderingStation
 

@@ -29,5 +29,5 @@ Look at the wiki pages. https://github.com/MarcusKoe/SolderStation-ext/wiki
 
 ToDo:
 
-- Change settings over menu is not implemented. It will be done the next month. 
-- Lights and animations - WS2812b strip
+- Change settings over menu is not implemented. It will be done the next 1-3 month. 
+- Lights and animations - WS2812b strip. It will be done the next 1-3 month. 

@@ -128,8 +128,8 @@ void LoadConfig(){
 
 
 void SetupRTC(){
-	////setTime(12, 7, 0, 15, 5, 2016); // Set Time in RTC
-    ////RTC.set(now());
+	//setTime(12, 7, 0, 15, 5, 2016); // Set Time in RTC
+    //RTC.set(now());
     //delay(500);
     setSyncProvider(RTC.get);   // get time from the RTC
     setSyncInterval(30007);
@@ -151,7 +151,7 @@ void setup(void) {
 	Serial.println("Loeten!");
 
 
-    Serial.println("compiled: ");
+    Serial.print("compiled: ");
     Serial.print(__DATE__);
     Serial.println(__TIME__);
 
@@ -162,7 +162,6 @@ void setup(void) {
 
 
 
-	Serial.println("RTC Gestartet");
 
 	FastLED.addLeds<WS2812B, LED_PIN,GRB>(leds, NUM_LEDS);
 	for(int i=0; i<NUM_LEDS; i++){

@@ -9,7 +9,6 @@
 #include <EEPROM.h>
 
 #include "config.h"
-//#include "conftables.h"
 
 
 #define VERSION "0.95"		//Version der Steuerung

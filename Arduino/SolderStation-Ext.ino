@@ -9,10 +9,10 @@
 #include <EEPROM.h>
 
 #include "config.h"
-#include "conftables.h"
+//#include "conftables.h"
 
 
-#define VERSION "0.9"		//Version der Steuerung
+#define VERSION "0.95"		//Version der Steuerung
 
 
 
@@ -53,74 +53,26 @@ byte low, high;
 
 void SaveConfig(){
 	//Serial.println("Save config");
-	for(int i=0; i<11; i++){
-		//Serial.println(i);
-	    eepromWriteInt(i*2, configuration[i]) ;
-	}
 	int c = 0 ;
-	for(int i=50; i<53; i++){
+	for(int i=0; i<3; i++){
 	    eepromWriteInt(i*2, HeaterPresets[c]) ;
 	    c++;
 	}
-	eepromWriteInt(76, ArrayTemps[1]) ;
-	eepromWriteInt(254, 1337) ;
+	eepromWriteInt(10, ArrayTemps[1]) ;
 }
 
 
 
+
 void LoadConfig(){
-	int checkval =  eepromReadInt(254) ;
-	if (checkval != 1337) {
-		Serial.println("Seems like a new Arduino :)");
-		Serial.println("Save config first time");
-		//delay(10000);
-		SaveConfig() ;
-	}
-	for(int i=0; i<11; i++){
-	    configuration[i] = eepromReadInt(i*2) ;
-	    //Serial.println(configuration[i]) ;
-	}
+
 	int c = 0 ;
-	for(int i=50; i<53; i++){
+	for(int i=0; i<3; i++){
 	    HeaterPresets[c] = eepromReadInt(i*2) ;
 	    c++ ;
 	}
-	ArrayTemps[1] = eepromReadInt(76) ;
+	ArrayTemps[1] = eepromReadInt(10) ;
 	// Check if config is valid
-	if(configuration[0] < 0 || configuration[0] > 1){
-		configuration[0] = 0 ;
-		SaveConfig() ;
-	} else if(configuration[1] < 0 || configuration[1] > 1){
-		configuration[1] = 0 ;
-		SaveConfig() ;
-	} else if(configuration[2] < 0 || configuration[2] > 1){
-		configuration[2] = 0 ;
-		SaveConfig() ;
-	} else if(configuration[3] < 0 || configuration[3] > 255){
-		configuration[3] = 64 ;
-		SaveConfig() ;
-	} else if(configuration[4] < 0 || configuration[4] > 255){
-		configuration[4] = 10 ;
-		SaveConfig() ;
-	} else if(configuration[5] < 0 || configuration[5] > 32765){
-		configuration[5] = 900 ;
-		SaveConfig() ;
-	} else if(configuration[6] < 0 || configuration[6] > 32765){
-		configuration[6] = 900 ;
-		SaveConfig() ;
-	} else if(configuration[7] < 0 || configuration[7] > 255){
-		configuration[7] = 255 ;
-		SaveConfig() ;
-	} else if (configuration[8] < 0 || configuration[8] > MaxTemp){
-		configuration[8] = 400 ;
-		SaveConfig() ;
-	} else if(configuration[9] < 0 || configuration[9] > 255){
-		configuration[9] = 255 ;
-		SaveConfig() ;
-	} else if(configuration[10] < 0 || configuration[10] > 255){
-		configuration[10] = 50 ;
-		SaveConfig() ;
-	} 	
 }
 
 
@@ -128,11 +80,12 @@ void LoadConfig(){
 
 
 void SetupRTC(){
+			//Hour, Minute, Second, Day, Minute, Year
 	//setTime(12, 7, 0, 15, 5, 2016); // Set Time in RTC
     //RTC.set(now());
     //delay(500);
     setSyncProvider(RTC.get);   // get time from the RTC
-    setSyncInterval(30007);
+    setSyncInterval(3601);
 	if(timeStatus() != timeSet) {
         Serial.println("Unable to sync with the RTC");
         setTime(12, 58, 10, 22, 12, 2016); 
@@ -148,20 +101,17 @@ void SetupRTC(){
 void setup(void) {
 
 	Serial.begin(115200);
-	Serial.println("Loeten!");
-
-
+	Serial.println("SolderStation-ext!");
+	Serial.print("Version: ");
+	Serial.println(VERSION);
     Serial.print("compiled: ");
     Serial.print(__DATE__);
+    Serial.print(" ");
     Serial.println(__TIME__);
 
     SetupRTC();
 
-
     LoadConfig();
-
-
-
 
 	FastLED.addLeds<WS2812B, LED_PIN,GRB>(leds, NUM_LEDS);
 	for(int i=0; i<NUM_LEDS; i++){
@@ -191,9 +141,6 @@ void setup(void) {
 	tft.fillScreen(ST7735_BLACK);
 	tft.setTextWrap(false);
 
-
-
-
 	pinMode(PiezoPin, OUTPUT) ;
 	digitalWrite(PiezoPin, LOW);
 
@@ -201,6 +148,8 @@ void setup(void) {
 	StatusMain = 1 ;
 
 }
+
+
 
 void loop() {
 	
@@ -211,6 +160,7 @@ void loop() {
 	if(intervallcheck(8) == true){
 		GetTime() ;
 	}
+
 	if(intervallcheck(7) == true){
 		getTemperature();
 	}
@@ -222,6 +172,11 @@ void loop() {
   	// Solderloop
 	if(StatusMain == 0){
   		PresetChange() ;
+  		Burntime() ;
+	}
+
+	if(StatusMain == 1){
+	    SetTime();
 	}
 
 	if(intervallcheck(1) == true){
@@ -230,17 +185,11 @@ void loop() {
 		}
 	}
 
-	
-
-
-
 	GetPotiDelta() ;
-	//delay(DELAY_MAIN_LOOP);		//wait for some time
 	
 	if(intervallcheck(4) == true){
 		buttonstates() ;
 	}
-
 
 	if(intervallcheck(11) == true){
 		StatusLED() ;
@@ -335,6 +284,7 @@ void GetTime(){
 	TimesArray[0] = hour();
 	TimesArray[1] = minute() ;
 	TimesArray[2] = second() ;
+	TimeEpoch = now() ;
 	// TimesArray[3] = day() ;
 	// TimesArray[4] = month() ;
 	// TimesArray[5] = year() ;
@@ -349,7 +299,7 @@ void buttonstates(){
 	unsigned long TimeStart = TimeNow ;
 	int whilestatus = 1 ;
 	int ResultValue ;
-	//Serial.println(" Butt0rnch3ck");
+	//Serial.println(" Buttoncheck");
 	for(int i=0; i<4; i++){
 	    ArrayButtons[i][0] = 0 ;
 		ArrayButtons[i][1] = 0 ;
@@ -445,15 +395,34 @@ void getTemperature() {
 	analogWrite(PWMpin, 0);		//switch off heater
 	delay(DELAY_MEASURE) ;			//wait for some time (to get low pass filter in steady state)
 	int adcValue = analogRead(TEMPin); // read the input on analog pin 7:
-	if(HeaterOn == true && (StatusMain == 0 || StatusMain == 1)){
-	    analogWrite(PWMpin, HeaterPWM);	//switch heater back to last value
-	}    
 	ArrayTemps[0] = round(((float) adcValue)*ADC_TO_TEMP_GAIN+ADC_TO_TEMP_OFFSET); //apply linear conversion to actual temperature
+	if(HeaterOn == true && (StatusMain == 0 || StatusMain == 1)){
+		if(ArrayTemps[0] <= configuration[8]){
+			analogWrite(PWMpin, HeaterPWM);	//switch heater back to last value
+		}
+	}
+
 	//Serial.println(ArrayTemps[0]);
-	
-	if(StatusMain == 0 || StatusMain == 1){
-		ArrayTemps[2] = ArrayTemps[1] - ArrayTemps[0] ; 
-	}   
+
+	if(StatusMain == 0 ){ //|| StatusMain == 1){
+		ArrayTemps[2] = ArrayTemps[1] - ArrayTemps[0] ;
+
+		// if burntimeflag == 1 set target temperature +50 degrees
+		if(Burntimestate == 1){
+			ArrayTemps[2] = (ArrayTemps[1] + 50) - ArrayTemps[0] ;
+		}
+
+	} else if ( StatusMain == 1) {
+		// if target temp lower then actual temp
+		if(ArrayTemps[1] < ArrayTemps[0]){
+		    ArrayTemps[2] = ArrayTemps[1] - ArrayTemps[0] ; 
+	    // else if actual temp lower then standbytemp
+		} else if(ArrayTemps[0] < configuration[11]){
+			ArrayTemps[2] = configuration[11] - ArrayTemps[0] ;    
+		} else {
+			ArrayTemps[2] = -2 ;
+		}
+	}
 
 }
 
@@ -465,8 +434,8 @@ void SetTargetTemp(){
 	SollTemp += PotiDelta ;
 	if(SollTemp < 0 ){
 		SollTemp = 0 ;
-	} else if (SollTemp > MaxTemp) {
-		SollTemp = MaxTemp ;
+	} else if (SollTemp > configuration[8]) {
+		SollTemp = configuration[8] ;
 	}
 	ArrayTemps[1] = SollTemp ;
 	//Serial.print("SollTemp: ");
@@ -481,14 +450,12 @@ void Heating(){
 	//Done: By Marcus
 
 	if(StatusMain == 0 || StatusMain == 1){
-
 		// a = PWM 0		b= PWM 100
 		int a = -2 ;
 		int b = 15 ;
 		int value = constrain(ArrayTemps[2], a, b);
 		HeaterPWM = map(value, a, b, 0, configuration[7]); 
 	}
-
 }
 
 
@@ -509,6 +476,72 @@ void PresetChange(){
 		}
 	}
 }
+
+
+
+
+void Burntime(){
+	//Serial.println("Burntime");
+	if (ArrayButtons[3][0] == 1 ){ //|| ArrayButtons[3][1] == 1) {
+		//Serial.println("Burntime");
+		Burntimes[0] = TimeNow ;
+		Burntimes[1] = configuration[13] * 1000 ;
+	}
+	unsigned long BurntimeSettime = Burntimes[1] ;
+	unsigned long BurntimeStarttime = Burntimes[0] ;
+	unsigned long BurntimeRuntime = TimeNow - BurntimeStarttime ;
+	if(BurntimeRuntime < BurntimeSettime){
+		//Serial.println("Burntime active!") ;
+		Burntimestate = 1 ;
+	} else {
+		//Serial.println("Burntime inactive!") ;
+		Burntimestate = 0 ;
+	}
+}
+
+
+
+
+
+
+
+
+void SetTime(){
+	//Serial.println("SetTime");
+	if (ArrayButtons[3][1] == 1 ){ //|| ArrayButtons[3][1] == 1) {
+		//Serial.println("Setting Time");
+		SetTimetimes[0] = TimeNow ;
+		SetTimetimes[1] = 5000 ;
+	}
+	unsigned long SetTimeSettime = SetTimetimes[1] ;
+	unsigned long SetTimeStarttime = SetTimetimes[0] ;
+	unsigned long SetTimeRuntime = TimeNow - SetTimeStarttime ;
+	if(SetTimeRuntime < SetTimeSettime){
+		//Serial.println("SetTime active!") ;
+		SetTimestate = 1 ;
+
+		if(ArrayButtons[0][0] == 1){
+			setTime(TimeEpoch + 3600);
+			SetTimetimes[0] = TimeNow ;
+			RTC.set(now()) ;
+		}
+		if(ArrayButtons[1][0] == 1){
+			setTime(TimeEpoch + 60);
+			SetTimetimes[0] = TimeNow ;
+			RTC.set(now()) ;
+		}
+		if(ArrayButtons[2][0] == 1){
+			setTime(TimeEpoch + 1);
+			SetTimetimes[0] = TimeNow ;
+			RTC.set(now()) ;
+		}
+
+	} else {
+		//Serial.println("SetTime inactive!") ;
+		SetTimestate = 0 ;
+	}
+}
+
 
 
 
@@ -912,8 +945,12 @@ int getTempUnit(int Unit, int Value){
 	} else if (Unit == 1) {
 		result = Value + 273 ;
 	} else if (Unit ==2) {
-	    float Fahrenheit = ((9/5) * Value) + 32 ;
-		result = Fahrenheit ;
+	    float Fahrenheit = ((1.8) * Value) + 32 ;
+	    //Serial.print("Celsius");
+	    //Serial.println(Value);
+	    //Serial.print("Fahrenheit");
+	    //Serial.println(int(Fahrenheit));
+		result = int(Fahrenheit) ;
 	}
 	return result ;
 }

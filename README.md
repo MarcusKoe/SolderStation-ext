@@ -11,7 +11,7 @@ Extended version with:
 - 4 buttons
 - - Temperature presets - stored in eeprom
 - RTC
-- - Change time via Buttons
+- - Set time via Buttons
 - Precise temperature settings via potentiometer
 - 4 seconds temperature boost (target temperature +50 degrees for 4 seconds for heating up big wires etc.)
 - Settings via config.h (Recompile to change it)
@@ -33,5 +33,4 @@ Look at the wiki pages: https://github.com/MarcusKoe/SolderStation-ext/wiki
 ToDo:
 
 - More docu at the wiki. Next weeks
-~~ Change settings over menu is not implemented. It will be done the in next 1-3 month. ~~
 - Lights and animations - WS2812b strip. It will be done in the next 1-3 month. 

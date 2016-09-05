@@ -9,15 +9,18 @@ Video: https://github.com/MarcusKoe/SolderStation-ext/blob/master/SolderStation-
 
 Extended version with:
 - 4 buttons
-- - Temperature presets
+- - Temperature presets - stored in eeprom
 - RTC
+- - Change time via Buttons
 - Precise temperature settings via potentiometer
-- Adjustable settings over display and buttons - Planned, not implented yet
-- - Multilanguage support
+- 4 seconds temperature boost (target temperature +50 degrees for 4 seconds for heating up big wires etc.)
+- Settings via config.h (Recompile to change it)
+- - Multilanguage support - Germen and English
 - - Different units - Celsius, Kelvin and Fahrenheit
 - - Display brightness
-- - Time to temperature drop down
-- - Inactivity warning after XXmin 
+- - Standby times etc.
+- Temperature drop down when put tip in holder
+- Inactivity warning after 30min 
 - Piezo buzzer
 - USB-Slot type A for light support (IKEA etc.)
 - Melt fuse
